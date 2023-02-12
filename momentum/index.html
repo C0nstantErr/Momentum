@@ -10,7 +10,54 @@
   <title>Momentum</title>
 </head>
 <body>
-  
+  <div class="wrapper">
+    <header class="header">
+      <div class="header__container">
+        <div class="player">
+          <div class="player__controls">
+            <div class="player__icon_prev player__icon"></div>
+            <div class="player__icon_play player__icon"></div>
+            <div class="player__icon_next player__icon"></div>
+          </div>
+          <ul class="player__list"></ul>
+        </div>
+        <div class="weather">
+          <input type="text" class="city">
+          <i class="weather-icon owf"></i>
+          <div class="weather-error"></div>
+          <div class="description-container">
+            <span class="temperature"></span>
+            <span class="weather-description"></span>
+          </div>
+          <div class="wind"></div>
+          <div class="humidity"></div>
+        </div>
+      </div>
+    </header>
+    <main class="main">
+      <div class="main__container">
+        <div class="slider-icons">
+          <div class="slider-icon slider-icon_prev"></div>
+          <div class="slider-icon slider-icon_next"></div>
+        </div>
+        <time class="time"></time>
+        <date class="date"></date>
+        <div class="greeting">
+          <span class="greeting__text"></span>
+          <input type="text" class="name">
+        </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="footer__container">
+        <div class="quote">
+          <div class="change-quote"></div>
+          <div class="quote__author"></div>
+          <div class="quote__text"></div>
+        </div>
+      </div>
+    </footer>
+  </div>
   <script src="./js/index.js"></script>
 </body>
 </html>
