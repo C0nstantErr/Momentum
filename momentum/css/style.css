@@ -245,3 +245,15 @@ slider-icon {
     padding: 5px;
   }
 }
+
+@media (max-width: 480px) {
+  .time {
+    min-height: 60px;
+    font-size: 48px;
+  }
+
+  .date {
+    min-height: 26px;
+    font-size: 20px;
+  }
+}
