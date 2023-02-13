@@ -181,6 +181,7 @@ slider-icon {
 
 .greeting {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   justify-content: stretch;
   align-items: center;
@@ -190,13 +191,16 @@ slider-icon {
 }
 
 .greeting__text {
-  flex: 1;  
+  flex: 1;
+  max-width: 50%;
+  font-weight: 700;
   padding: 10px;
   text-align: right;
 }
 
 .name {
   flex: 1;
+  font-weight: 700;
   max-width: 50%;
   padding: 10px;
   font-size: 40px;
@@ -208,8 +212,13 @@ slider-icon {
 }
 
 .name::placeholder {
+  font-weight: 400;
   color: #fff;
   opacity: .6;
+}
+
+.name:focus::placeholder {
+  opacity: 0;
 }
 
 .change-quote {
