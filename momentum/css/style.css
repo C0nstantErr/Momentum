@@ -15,7 +15,7 @@ body {
 .wrapper {
   width: 100vw;
   height: 100vh;
-  background-image: none;
+  /* background-image: url("https://github.com/C0nstantErr/momentum_img/blob/main/img/afternoon/03.webp");  */
   background-color: rgba(0, 0, 0, 0.5);
   background-position: center;
   background-size: cover;
@@ -23,7 +23,7 @@ body {
   background-blend-mode: multiply;
   color: #fff;
   text-align: center;
-  transition: background-image 1s ease-in-out;
+  transition: background-image 0.1s ease-in-out;
 }
 
 .header {
@@ -144,7 +144,7 @@ body {
   padding: 20px;
 }
 
-slider-icon {
+.slider-icon {
   position: absolute;
   top: 50%;
   margin-top: -16px;
@@ -153,12 +153,12 @@ slider-icon {
 
 .slider-icon_prev {
   left: 20px;
-  /* background-image: url("../assets/svg/slider-prev.svg"); */
+  background-image: url("../img/slider-prev.svg");
 }
 
 .slider-icon_next {
   right: 20px;
-  /* background-image: url("../assets/svg/slider-next.svg"); */
+  background-image: url("../img/slider-next.svg");
 }
 
 .time {
