@@ -62,7 +62,7 @@ function getLocalStorage() {
     personName.value = name; 
   }
   city.value = localStorage.getItem('city') || 'Minsk';
-  console.log('get', city.value);
+  // console.log('get', city.value);
 }
 
 window.addEventListener('beforeunload', setLocalStorage);
@@ -139,6 +139,7 @@ const humidity = document.querySelector('.humidity');
 const weatherErorr = document.querySelector('.weather-error');
 
 city.addEventListener('change', getWeather);
+city.addEventListener('keydown', changeFocus);
 
 async function getWeather() {
   let cityName = city.value;
@@ -165,4 +166,26 @@ async function getWeather() {
   }
 }
 /*================= 5. quote ============================= */
+const author = document.querySelector('.quote__author');
+const quote = document.querySelector('.quote__text');
+const quoteReload = document.querySelector('.change-quote');
+let index; 
 
+async function getQuotes() {
+  const url = 'https://raw.githubusercontent.com/C0nstantErr/momentum_img/main/quotes/quotes.json';
+  const result = await fetch(url);
+  const data = await result.json();
+
+  let i;
+  do {
+    i = getRandomNum(0, data.quotes.length-1);
+  } while (i === index);
+  index = i; 
+
+  quote.textContent = `'${data.quotes[i].quote}'`;
+  author.textContent = data.quotes[i].author;
+  
+}
+
+document.addEventListener('DOMContentLoaded', getQuotes);
+quoteReload.addEventListener('click', getQuotes);
