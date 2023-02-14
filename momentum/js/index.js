@@ -53,6 +53,7 @@ function showGreetings(time) {
 
 function setLocalStorage() {
   localStorage.setItem('name', personName.value);
+  localStorage.setItem('city', city.value);
 }
 
 function getLocalStorage() {
@@ -60,10 +61,13 @@ function getLocalStorage() {
   if (name) {
     personName.value = name; 
   }
+  city.value = localStorage.getItem('city') || 'Minsk';
+  console.log('get', city.value);
 }
 
 window.addEventListener('beforeunload', setLocalStorage);
 window.addEventListener('load', getLocalStorage);
+window.addEventListener('load',  getWeather);
 personName.addEventListener('focus', removeValue);
 personName.addEventListener('keydown', changeFocus);
 
@@ -126,3 +130,39 @@ function setBg(elem) {
 setBg(imgWrapper);
 
 /*================= 4. weather ============================= */
+const city = document.querySelector('.city');
+const weatherIcon = document.querySelector('.weather-icon');
+const temperature = document.querySelector('.temperature');
+const weatherDescription = document.querySelector('.weather-description');
+const wind = document.querySelector('.wind');
+const humidity = document.querySelector('.humidity');
+const weatherErorr = document.querySelector('.weather-error');
+
+city.addEventListener('change', getWeather);
+
+async function getWeather() {
+  let cityName = city.value;
+  let lang = 'en';
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=${lang}&appid=e25844e58c1fb53f5fd60c34379f7f12&units=metric`;
+ 
+  const result = await fetch(url);
+  if (result.ok) {
+    const data = await result.json();
+    weatherErorr.classList.remove('happen');
+    weatherIcon.className = 'weather-icon owf';
+    weatherIcon.classList.add(`owf-${data.weather[0].id}`);
+    weatherDescription.textContent = data.weather[0].description;
+    temperature.textContent = `${data.main.temp}${String.fromCharCode(67)}${String.fromCharCode(176)}`;
+    wind.textContent = `Wind speed: ${Math.round(data.wind.speed)}m/s`;
+    humidity.textContent = `Humidity: ${Math.round(data.main.humidity)}${String.fromCharCode(37)}`;
+  } else {
+    weatherErorr.classList.add('happen');
+    weatherIcon.className = 'weather-icon owf';
+    weatherDescription.textContent = null;
+    temperature.textContent = null;
+    wind.textContent = null;
+    humidity.textContent = null;
+  }
+}
+/*================= 5. quote ============================= */
+

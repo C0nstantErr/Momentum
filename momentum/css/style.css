@@ -161,6 +161,71 @@ body {
   background-image: url("../img/slider-next.svg");
 }
 
+.weather {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  /* row-gap: 5px; */
+  /* width: 180px; */
+  width: 200px;
+  /* min-height: 180px; */
+  min-height: 160px;
+  text-align: left;
+}
+
+.weather-icon {
+  font-size: 44px;
+}
+
+.weather-error {
+  display: none;
+  font-size: 18px;
+  line-height: 1.5;
+
+  margin-top: -10px;
+}
+
+.weather-error.happen {
+  display: block;
+}
+
+.description-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 12px;
+  font-size: 16px;
+}
+
+.city {
+  width: 170px;
+  height: 34px;
+  padding: 5px;
+  font-size: 20px;
+  line-height: 24px;
+  color: #fff;  
+  border: 0;
+  outline: 0;
+  border-bottom: 1px solid #fff;
+  background-color: transparent;
+}
+
+.city::placeholder {  
+  font-size: 20px;
+  color: #fff;
+  opacity: 0.6;
+}
+
+.wind {
+  font-size: 16px;
+}
+
+.humidity {
+  font-size: 16px;
+}
+
 .time {
   min-height: 124px;
   margin-bottom: 10px;
