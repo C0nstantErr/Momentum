@@ -189,3 +189,105 @@ async function getQuotes() {
 
 document.addEventListener('DOMContentLoaded', getQuotes);
 quoteReload.addEventListener('click', getQuotes);
+
+/*================= 6. audio player (simple) ============================= */
+
+const playerControls = document.querySelector('.player__controls');
+const playerList = document.querySelector('.player__list');
+const audio = new Audio();
+audio.currentTime = 0;
+let playNum = 0; 
+let isPlay = false;
+const playList = [
+  {
+    title: 'Aqua Caelestis',
+    src: './sounds/Aqua_Caelestis.mp3',
+    duration: '00:40'
+  },
+  {
+    title: 'River Flows In You',
+    src: './sounds/River_Flows_In_You.mp3',
+    duration: '01:37'
+  },
+  {
+    title: 'Ennio Morricone',
+    src: './sounds/Ennio_Morricone.mp3',
+    duration: '01:37'
+  },
+  {
+    title: 'Summer Wind',
+    src: './sounds/Summer_Wind.mp3',
+    duration: '01:51'
+  }
+];
+audio.src = playList[playNum].src; 
+
+playList.forEach(item => {
+  let playItem = document.createElement('li');
+  playItem.classList.add('play-item');
+  playItem.textContent = item.title;
+  playerList.append(playItem);
+})
+
+
+function playAudio(e) {
+  if (e.target.classList.contains('player__icon_play')) {
+    if (!isPlay) {
+      audio.play();
+      isPlay = true;
+      changePlayItemStyle(playerList.children[playNum]);
+      e.target.classList.toggle('pause');
+    } else {
+      audio.pause();
+      isPlay = false;
+      changePlayItemStyle(playerList.children[playNum]);
+      e.target.classList.toggle('pause');
+    }
+    addSelectedStyle(playerList.children[playNum]);
+  } else if (e.target.classList.contains('player__icon_prev')) {
+    playNum = playNum > 0 ? --playNum : playList.length-1;
+    audio.src = playList[playNum].src;
+    addSelectedStyle(playerList.children[playNum]);
+    if (isPlay) {
+      audio.play();
+      changePlayItemStyle(playerList.children[playNum]);
+    }
+  } else if (e.target.classList.contains('player__icon_next')) {
+    playNum = playNum < playList.length-1 ? ++playNum : 0;
+    audio.src = playList[playNum].src;
+    addSelectedStyle(playerList.children[playNum]);
+    if (isPlay) {
+      audio.play();
+      changePlayItemStyle(playerList.children[playNum]);
+    }
+  }
+}
+
+function changePlayItemStyle(item) {
+  Array.from(playerList.children).forEach(elem => {
+    elem.classList.remove('item-active');
+  });
+  if(isPlay) {
+    item.classList.add('item-active');
+  }
+}
+
+function infinitePlay() {
+  playNum = playNum < playList.length-1 ? ++playNum : 0;
+  audio.src = playList[playNum].src;
+  changePlayItemStyle(playerList.children[playNum]);
+  addSelectedStyle(playerList.children[playNum]);
+  audio.play();
+}
+
+function addSelectedStyle(item) {
+  Array.from(playerList.children).forEach(elem => {
+    elem.classList.remove('item_selected');
+  });
+  item.classList.add('item_selected');
+}
+
+playerControls.addEventListener('click', playAudio);
+audio.addEventListener('ended', infinitePlay);
+
+/*================= 7. audio player (advanced) ============================= */
