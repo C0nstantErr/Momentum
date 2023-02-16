@@ -14,17 +14,37 @@
     <header class="header">
       <div class="header__container">
         <div class="player">
-          <div class="player__controls">
-            <div class="player__icon_prev player__icon"></div>
-            <div class="player__icon_play player__icon"></div>
-            <div class="player__icon_next player__icon"></div>
+          <div class="player__top">
+            <div class="player__title">Aqua Caelestis</div>
+            <div class="player__animation">
+              <div class="animation__line"></div>
+              <div class="animation__line"></div>
+              <div class="animation__line"></div>
+            </div>
           </div>
-          <ul class="player__list"></ul>
+          <div class="progress-bar">
+            <div class="progress-bar__field">
+              <div class="progress-bar__indicator"></div>
+            </div>
+          </div>
+          <div class="player__bottom">
+            <div class="currentTime">00:00</div>
+            <div class="player__controls">
+              <div class="player__icon_prev player__icon"></div>
+              <div class="player__icon_play player__icon"></div>
+              <div class="player__icon_next player__icon"></div>
+            </div>
+            <div class="duration">00:00</div>
+          </div>
+          <ul class="player__list">
+            <!-- <img style="vertical-align: top; padding-top: 3px;" src="./img/mute.svg" alt=""> -->
+            <!-- <img style="width: 28px; height: 24px;" src="./img/volume-up.svg" alt=""> -->
+          </ul>
         </div>
         <div class="weather">
           <input type="text" class="city">
           <i class="weather-icon owf"></i>
-          <div class="weather-error">Error! There is no result for your response...</div>
+          <div class="weather-error">Error! There is no result for your request...</div>
           <div class="description-container">
             <span class="temperature"></span>
             <span class="weather-description"></span>

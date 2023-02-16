@@ -191,9 +191,10 @@ document.addEventListener('DOMContentLoaded', getQuotes);
 quoteReload.addEventListener('click', getQuotes);
 
 /*================= 6. audio player (simple) ============================= */
-
+const player = document.querySelector('.player');
 const playerControls = document.querySelector('.player__controls');
 const playerList = document.querySelector('.player__list');
+const playIcon = document.querySelector('.player__icon_play');
 const audio = new Audio();
 audio.currentTime = 0;
 let playNum = 0; 
@@ -202,33 +203,44 @@ const playList = [
   {
     title: 'Aqua Caelestis',
     src: './sounds/Aqua_Caelestis.mp3',
-    duration: '00:40'
+    duration: '39'
   },
   {
     title: 'River Flows In You',
     src: './sounds/River_Flows_In_You.mp3',
-    duration: '01:37'
+    duration: '97'
   },
   {
     title: 'Ennio Morricone',
     src: './sounds/Ennio_Morricone.mp3',
-    duration: '01:37'
+    duration: '97'
   },
   {
     title: 'Summer Wind',
     src: './sounds/Summer_Wind.mp3',
-    duration: '01:51'
+    duration: '110'
   }
 ];
+const playListDuration = [];
+let idShowCurMusTime; // id for set interval; 
+let idChangeProgressBar; // id for set interval;
 audio.src = playList[playNum].src; 
 
-playList.forEach(item => {
+playList.forEach((item, index) => {
   let playItem = document.createElement('li');
   playItem.classList.add('play-item');
   playItem.textContent = item.title;
+  playItem.dataset.index = index;
   playerList.append(playItem);
+
+  let min = padZero(Math.floor(item.duration / 60).toString(), 2);
+  let sec = padZero(Math.floor(item.duration % 60).toString(), 2);
+  playListDuration.push(`${min}:${sec}`);
 })
 
+function showAudioDuration(elem, n) {
+  elem.textContent = playListDuration[n];
+}
 
 function playAudio(e) {
   if (e.target.classList.contains('player__icon_play')) {
@@ -237,30 +249,106 @@ function playAudio(e) {
       isPlay = true;
       changePlayItemStyle(playerList.children[playNum]);
       e.target.classList.toggle('pause');
+      showAudioDuration(duration, playNum);
+      idShowCurMusTime = setInterval(showCurrentMusicTime, 500);
+      idChangeProgressBar = setInterval(changeProgressBar, 500);
+      showSongTitle(playerTitle, playNum, playList);
+
+      // найти песню которой нужно поменять иконку
+      // removeSongPlayIcon();
+      findSong().classList.toggle('paused');
+      // changeSongStatus();
     } else {
       audio.pause();
       isPlay = false;
       changePlayItemStyle(playerList.children[playNum]);
       e.target.classList.toggle('pause');
+      clearInterval(idShowCurMusTime);
+      clearInterval(idChangeProgressBar);
+      // findSong().classList.toggle('paused');
+      removeSongPlayIcon();
     }
     addSelectedStyle(playerList.children[playNum]);
   } else if (e.target.classList.contains('player__icon_prev')) {
     playNum = playNum > 0 ? --playNum : playList.length-1;
     audio.src = playList[playNum].src;
     addSelectedStyle(playerList.children[playNum]);
+    showCurrentMusicTime();
+    showAudioDuration(duration, playNum);
+    showSongTitle(playerTitle, playNum, playList);
+    setDefaultWidth(progressPlay, progressBarIndicator.offsetWidth);
+    // clearInterval(idChangeProgressBar);
     if (isPlay) {
       audio.play();
       changePlayItemStyle(playerList.children[playNum]);
+
+      removeSongPlayIcon();
+      findSong().classList.toggle('paused');
+      // showAudioDuration(duration, playNum);
     }
   } else if (e.target.classList.contains('player__icon_next')) {
     playNum = playNum < playList.length-1 ? ++playNum : 0;
     audio.src = playList[playNum].src;
     addSelectedStyle(playerList.children[playNum]);
+    showCurrentMusicTime()
+    showAudioDuration(duration, playNum);
+    showSongTitle(playerTitle, playNum, playList);
+    setDefaultWidth(progressPlay, progressBarIndicator.offsetWidth);
+    // clearInterval(idChangeProgressBar);
     if (isPlay) {
       audio.play();
       changePlayItemStyle(playerList.children[playNum]);
+      // showAudioDuration(duration, playNum);
+      removeSongPlayIcon();
+      findSong().classList.toggle('paused');
     }
+  } else if (e.target.matches('.play-item')) {
+   
+    // e.target.classList.toggle ('paused');
+    // console.log(playNum)
+    // Array.from(playerList.children).forEach(item => item.classList.remove('paused'));
+    // меняем иконку проигрыв
+    // музыка не играла
+    if (!isPlay) {
+      playNum = +e.target.dataset.index;
+      audio.src = playList[playNum].src;
+      isPlay = true;
+      audio.play(); // включаем музыку
+      addSelectedStyle(playerList.children[playNum]);
+
+      showAudioDuration(duration, playNum);
+      idShowCurMusTime = setInterval(showCurrentMusicTime, 500);
+      idChangeProgressBar = setInterval(changeProgressBar, 500);
+      showSongTitle(playerTitle, playNum, playList);
+
+      e.target.classList.add ('paused');
+      playIcon.classList.add('pause');
+    } else if (isPlay) {
+      if (playNum === +e.target.dataset.index) {
+        isPlay = false;
+        audio.pause();
+        playIcon.classList.remove('pause');
+        e.target.classList.remove('paused');
+        clearInterval(idShowCurMusTime);
+        clearInterval(idChangeProgressBar);
+      } else {
+        Array.from(playerList.children).forEach(item => item.classList.remove('paused'));
+        playNum = +e.target.dataset.index;
+        audio.src = playList[playNum].src;
+        audio.play();
+        addSelectedStyle(playerList.children[playNum]);
+        e.target.classList.add ('paused');
+        
+        showAudioDuration(duration, playNum);
+        idShowCurMusTime = setInterval(showCurrentMusicTime, 500);
+        idChangeProgressBar = setInterval(changeProgressBar, 500);
+        showSongTitle(playerTitle, playNum, playList);
+      }
+      
+    }
+      
   }
+
 }
 
 function changePlayItemStyle(item) {
@@ -278,6 +366,8 @@ function infinitePlay() {
   changePlayItemStyle(playerList.children[playNum]);
   addSelectedStyle(playerList.children[playNum]);
   audio.play();
+  showAudioDuration(duration, playNum);
+  showSongTitle(playerTitle, playNum, playList);
 }
 
 function addSelectedStyle(item) {
@@ -287,7 +377,73 @@ function addSelectedStyle(item) {
   item.classList.add('item_selected');
 }
 
-playerControls.addEventListener('click', playAudio);
+player.addEventListener('click', playAudio);
+// playerControls.addEventListener('click', playAudio);
 audio.addEventListener('ended', infinitePlay);
 
 /*================= 7. audio player (advanced) ============================= */
+const animationBox = document.querySelector('.player__animation');
+const duration = document.querySelector('.duration');
+const currentTime = document.querySelector('.currentTime');
+const playerTitle = document.querySelector('.player__title');
+const progressBar = document.querySelector('.progress-bar');
+const progressBarIndicator = document.querySelector('.progress-bar__indicator');
+const progressPlay = document.querySelector('.progress-bar__field');
+const progressBarWidth = progressBar.offsetWidth - progressPlay.offsetWidth;
+
+audio.addEventListener('play', musicAnimation);
+audio.addEventListener('pause', musicAnimation);
+
+function musicAnimation() {
+  if(isPlay) {
+    Array.from(animationBox.children).forEach(elem => elem.classList.add('play_start'));
+  } else {
+    Array.from(animationBox.children).forEach(elem => elem.classList.remove('play_start'));
+  }
+}
+
+function showCurrentMusicTime() {
+  const min = padZero(Math.floor(audio.currentTime / 60).toString(), 2);
+  const sec = padZero(Math.floor(audio.currentTime % 60).toString(), 2);
+  currentTime.textContent = `${min}:${sec}`;
+}
+
+function showSongTitle(elem, num, info) {
+  elem.textContent = info[num].title;
+}
+
+function changeProgressBar() {
+  let duration = Math.floor(audio.duration);
+  let curTime = +((audio.currentTime + Number.EPSILON).toFixed(2));
+  let curPercent = Math.floor(curTime * 100 / duration); 
+  let w = Math.floor(curPercent * progressBarWidth / 100 + 8); // in px
+  let percent = (w < progressBar.offsetWidth) ? Math.floor(w * 100 / progressBar.offsetWidth) : 100; // in %
+
+  progressPlay.style.width = `${percent}%`;
+  }
+
+  function setDefaultWidth(elem, num) {
+    elem.style.width = `${num}px`;
+  }
+
+  // playerList.addEventListener('click', playSong);
+
+  // function playSong(e) {
+  //   let item = e.target;
+  //   console.log(item.matches('.play-item'));
+  //   if (item.matches('.play-item')) {
+  //     item.classList.toggle ('paused');
+  //     playNum = item.dataset.index;
+  //     audio.play();
+  //     playItem.dataset.index = index;
+  //   }
+  // }
+
+  function findSong() {
+    return Array.from(playerList.children).find(song => +song.dataset.index === playNum);
+  }
+
+  function removeSongPlayIcon() {
+    Array.from(playerList.children).forEach(song => song.classList.remove('paused'));
+    // findSong().classList.toggle('paused');
+  }
