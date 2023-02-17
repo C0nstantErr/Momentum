@@ -35,11 +35,14 @@
               <div class="player__icon_next player__icon"></div>
             </div>
             <div class="duration">00:00</div>
+            <div class="volume">
+              <div class="volume__control">
+                <input class="volume__input" type="range" min="0" max="100" value="50" step="5" orient="vertical">
+              </div>
+              <div class="volume__img"></div>
+            </div>
           </div>
-          <ul class="player__list">
-            <!-- <img style="vertical-align: top; padding-top: 3px;" src="./img/mute.svg" alt=""> -->
-            <!-- <img style="width: 28px; height: 24px;" src="./img/volume-up.svg" alt=""> -->
-          </ul>
+          <ul class="player__list"></ul>
         </div>
         <div class="weather">
           <input type="text" class="city">

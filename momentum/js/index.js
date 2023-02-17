@@ -344,11 +344,8 @@ function playAudio(e) {
         idChangeProgressBar = setInterval(changeProgressBar, 500);
         showSongTitle(playerTitle, playNum, playList);
       }
-      
     }
-      
   }
-
 }
 
 function changePlayItemStyle(item) {
@@ -378,7 +375,6 @@ function addSelectedStyle(item) {
 }
 
 player.addEventListener('click', playAudio);
-// playerControls.addEventListener('click', playAudio);
 audio.addEventListener('ended', infinitePlay);
 
 /*================= 7. audio player (advanced) ============================= */
@@ -390,9 +386,50 @@ const progressBar = document.querySelector('.progress-bar');
 const progressBarIndicator = document.querySelector('.progress-bar__indicator');
 const progressPlay = document.querySelector('.progress-bar__field');
 const progressBarWidth = progressBar.offsetWidth - progressPlay.offsetWidth;
+const volumeImg = document.querySelector('.volume__img');
+const volumeSlider = document.querySelector('.volume__input');
+
 
 audio.addEventListener('play', musicAnimation);
 audio.addEventListener('pause', musicAnimation);
+progressBar.addEventListener('click', upgradeProgressPlay);
+volumeImg.addEventListener('click', toggleVolume);
+volumeSlider.addEventListener('input', changeVolumeLevel);
+volumeSlider.addEventListener('change', changeVolumeImg);
+
+function changeVolumeImg() {
+   if (audio.volume === 0) {
+    volumeImg.classList.add('mute');
+   } else {
+    volumeImg.classList.remove('mute');
+   }
+}
+
+function changeVolumeLevel(e) {
+  let v = e.target.value;
+  audio.volume = v / 100; 
+}
+
+function toggleVolume(e) {
+  if(audio.volume) {
+    audio.volume = 0;
+    volumeSlider.value = 0;
+  } else {
+    audio.volume = 0.5;
+    volumeSlider.value = 50;
+  }
+  e.target.classList.toggle('mute');
+}
+
+function upgradeProgressPlay(e) {
+  const x = e.offsetX; 
+  const width = e.target.offsetWidth;
+  const duration = audio.duration;
+  const progressRate = x / width; 
+  audio.currentTime = progressRate  * duration;
+  progressPlay.style.width = `${progressRate * 100}%`;
+  showCurrentMusicTime();
+}
 
 function musicAnimation() {
   if(isPlay) {
@@ -426,24 +463,10 @@ function changeProgressBar() {
     elem.style.width = `${num}px`;
   }
 
-  // playerList.addEventListener('click', playSong);
-
-  // function playSong(e) {
-  //   let item = e.target;
-  //   console.log(item.matches('.play-item'));
-  //   if (item.matches('.play-item')) {
-  //     item.classList.toggle ('paused');
-  //     playNum = item.dataset.index;
-  //     audio.play();
-  //     playItem.dataset.index = index;
-  //   }
-  // }
-
   function findSong() {
     return Array.from(playerList.children).find(song => +song.dataset.index === playNum);
   }
 
   function removeSongPlayIcon() {
     Array.from(playerList.children).forEach(song => song.classList.remove('paused'));
-    // findSong().classList.toggle('paused');
   }
